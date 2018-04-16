@@ -15,8 +15,7 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-    if (err) throw err;
-    console.log(`Connected as id ${connection.threadId}`);
+    if (err) console.log(err);
     pickItems();
 });
 
