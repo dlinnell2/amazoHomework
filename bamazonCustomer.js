@@ -4,6 +4,8 @@ var Table = require('tty-table');
 
 var rows;
 var header;
+var selectedItem;
+var selectedQuantity;
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -56,7 +58,7 @@ function pickItems() {
             rows.push(newRow);
         }
 
-        var t1 = Table(header, rows,{
+        var t1 = Table(header, rows, {
             borderStyle: 1,
             borderColor: "blue",
             paddingBottom: 0,
@@ -68,9 +70,92 @@ function pickItems() {
         console.log(str1);
 
         customerSelect();
-    })
-}
+    });
+};
 
-function customerSelect(){
-    console.log('Success');
-}
+function customerSelect() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'item',
+            message: 'Please enter the ID of the item you would like to purchase',
+            validate: function (value) {
+                if ((!isNaN(value)) && (parseInt(value) > 0)) {
+                    return true;
+                }
+                console.log('\nPlease enter a valid number');
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'quantity',
+            message: 'Please enter the quantity of the item you would like to purchase',
+            validate: function (value) {
+                if ((!isNaN(value)) && (parseInt(value) > 0)) {
+                    return true;
+                }
+                console.log('\nPlease enter a valid number');
+                return false;
+            }
+        }
+    ]).then(function(answers){
+        selectedItem = parseInt(answers.item);
+        selectedQuantity = parseInt(answers.quantity);
+
+        purchaseItems();
+    });
+};
+
+function purchaseItems(){
+    connection.query('SELECT * FROM products WHERE ?', {
+        item_id: selectedItem
+    }, function(err, res){
+        if (err) console.log(err);
+
+        var available = res[0].stock_quantity;
+        var itemName = res[0].product_name;
+
+        if (available >= selectedQuantity){
+            
+            var newQuantity = available - selectedQuantity;
+            var totalCost = (selectedQuantity * res[0].price).toFixed(2);
+
+            connection.query('UPDATE products SET ? WHERE ?', [{
+                stock_quantity: newQuantity
+            },{
+                item_id: selectedItem
+
+            }], function(err, res){
+                
+                if (err) console.log(err);
+
+                console.log(`Thanks for purchasing a ${itemName}! You spent a total of $${totalCost}`);
+                continueShop();
+                
+            });
+
+        } else {
+            console.log(`Sorry! We don't have that many of the item available. Currently we have ${available} of that item available!`);
+
+            continueShop();
+        };
+    });
+};
+
+function continueShop(){
+    inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'continue',
+            message: 'Would you like to continue shopping?'
+        }
+    ]).then(function(answers){
+        if(answers.continue){
+            pickItems();
+        } else {
+            console.log('Thanks for shopping!')
+            process.exit();
+        };
+    });
+};
