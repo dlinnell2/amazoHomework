@@ -176,5 +176,53 @@ function addInventory() {
 };
 
 function addProduct() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'product',
+            message: 'What item would you like to add?'
+        },
+        {
+            type: 'input',
+            name: 'price',
+            message: 'How much will you charge for this item?',
+            validate: function (value) {
+                if ((!isNaN(value)) && (parseInt(value) > 0)) {
+                    return true;
+                }
+                console.log('\nPlease enter a valid number');
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'quantity',
+            message: 'How many of this item do you have in stock?',
+            validate: function (value) {
+                if ((!isNaN(value)) && (parseInt(value) > 0)) {
+                    return true;
+                }
+                console.log('\nPlease enter a valid number');
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'department',
+            message: 'What department is this product under?'
+        }
+    ]).then(function(answers){
+        connection.query('INSERT INTO products SET ?',{
+            product_name: answers.product,
+            department_name: answers.department,
+            price: answers.price,
+            stock_quantity: answers.quantity
+        }, function(err, res){
+            if (err) console.log(err);
 
+            console.log(`${answers.quantity} ${answers.product} added to inventory!`);
+
+            managerChoices();
+        })
+    });
 };
