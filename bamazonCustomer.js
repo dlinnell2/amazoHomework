@@ -6,6 +6,7 @@ var rows;
 var header;
 var selectedItem;
 var selectedQuantity;
+var itemChoices;
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -57,6 +58,8 @@ function pickItems() {
             rows.push(newRow);
         }
 
+        itemChoices = rows.length;
+
         var t1 = Table(header, rows, {
             borderStyle: 1,
             borderColor: "blue",
@@ -79,10 +82,10 @@ function customerSelect() {
             name: 'item',
             message: 'Please enter the ID of the item you would like to purchase',
             validate: function (value) {
-                if ((!isNaN(value)) && (parseInt(value) > 0)) {
+                if ((!isNaN(value)) && (parseInt(value) > 0) && (value <= itemChoices)) {
                     return true;
                 }
-                console.log('\nPlease enter a valid number');
+                console.log('\nPlease enter a valid ID');
                 return false;
             }
         },
@@ -107,6 +110,7 @@ function customerSelect() {
 };
 
 function purchaseItems(){
+
     connection.query('SELECT * FROM products WHERE ?', {
         item_id: selectedItem
     }, function(err, res){
