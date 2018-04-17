@@ -2,9 +2,6 @@ var mysql = require('mysql');
 var inquirer = require('inquirer');
 var Table = require('tty-table');
 
-var rows;
-var header;
-
 var connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -171,8 +168,8 @@ function addInventory() {
                 managerChoices();
                 
             });
-        })
-    })
+        });
+    });
 };
 
 function addProduct() {
@@ -223,6 +220,6 @@ function addProduct() {
             console.log(`${answers.quantity} ${answers.product} added to inventory!`);
 
             managerChoices();
-        })
+        });
     });
 };
