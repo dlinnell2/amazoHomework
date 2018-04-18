@@ -54,7 +54,7 @@ function managerChoices() {
 
 function productView(param) {
     connection.query(param, function (err, res) {
-        if (err) console.log(err);
+        if (err) throw err;
 
         var header = [
             {
@@ -114,7 +114,7 @@ function productView(param) {
 function addInventory() {
     connection.query('SELECT * FROM products', function (err, res) {
 
-        if (err) console.log(err);
+        if (err) throw err;
 
         var currentItems = [];
         for (item of res) {
@@ -162,7 +162,7 @@ function addInventory() {
 
             }], function(err, res){
                 
-                if (err) console.log(err);
+                if (err) throw err;
 
                 console.log(`You now have ${newQuantity} of ${choosenItem} in stock`);
                 managerChoices();
@@ -215,7 +215,7 @@ function addProduct() {
             price: answers.price,
             stock_quantity: answers.quantity
         }, function(err, res){
-            if (err) console.log(err);
+            if (err) throw err;
 
             console.log(`${answers.quantity} ${answers.product} added to inventory!`);
 

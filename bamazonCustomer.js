@@ -16,13 +16,13 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-    if (err) console.log(err);
+    if (err) throw err;
     pickItems();
 });
 
 function pickItems() {
     connection.query('SELECT * FROM products', function (err, res) {
-        if (err) console.log(err);
+        if (err) throw err;
 
         var header = [
             {
@@ -114,24 +114,28 @@ function purchaseItems(){
     connection.query('SELECT * FROM products WHERE ?', {
         item_id: selectedItem
     }, function(err, res){
-        if (err) console.log(err);
+        if (err) throw err;
 
         var available = res[0].stock_quantity;
         var itemName = res[0].product_name;
+        var currentSales = res[0].product_sales;
 
         if (available >= selectedQuantity){
             
             var newQuantity = available - selectedQuantity;
             var totalCost = (selectedQuantity * res[0].price).toFixed(2);
+            var totalSales = currentSales + totalCost;
 
             connection.query('UPDATE products SET ? WHERE ?', [{
-                stock_quantity: newQuantity
+                stock_quantity: newQuantity,
+                product_sales: totalSales
+
             },{
                 item_id: selectedItem
 
             }], function(err, res){
                 
-                if (err) console.log(err);
+                if (err) throw err;
 
                 console.log(`Thanks for purchasing a ${itemName}! You spent a total of $${totalCost}`);
                 continueShop();
