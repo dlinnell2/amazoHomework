@@ -124,7 +124,7 @@ function purchaseItems(){
             
             var newQuantity = available - selectedQuantity;
             var totalCost = (selectedQuantity * res[0].price).toFixed(2);
-            var totalSales = currentSales + totalCost;
+            var totalSales = parseInt(currentSales) + parseInt(totalCost);
 
             connection.query('UPDATE products SET ? WHERE ?', [{
                 stock_quantity: newQuantity,
