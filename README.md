@@ -13,13 +13,13 @@ After each purchase, the customer is asked if they would like to continue shoppi
 On running the manager view, the user is presented with four options.
 
 - View products in inventory
-- - Displays all products available for purchase
+ - Displays all products available for purchase
 
 - View low inventory
-- - Displays all products available for purchase with an inventory of 3 or less
+ - Displays all products available for purchase with an inventory of 3 or less
 
 - Add to inventory
-- - Allows a user allow a specified amount of an item to inventory
+ - Allows a user allow a specified amount of an item to inventory
 
 - Add new product
-- - Allows a user to add an entirely new product to the store
+ - Allows a user to add an entirely new product to the store
