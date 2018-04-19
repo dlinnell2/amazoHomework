@@ -129,7 +129,6 @@ function purchaseItems(){
             connection.query('UPDATE products SET ? WHERE ?', [{
                 stock_quantity: newQuantity,
                 product_sales: totalSales
-
             },{
                 item_id: selectedItem
 
@@ -137,7 +136,7 @@ function purchaseItems(){
                 
                 if (err) throw err;
 
-                console.log(`Thanks for purchasing a ${itemName}! You spent a total of $${totalCost}`);
+                console.log(`Thanks for purchasing ${selectedQuantity} ${itemName}! You spent a total of $${totalCost}`);
                 continueShop();
                 
             });
